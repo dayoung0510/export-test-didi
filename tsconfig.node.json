@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "allowSyntheticDefaultImports": true,
+
+    /* Bundler mode */
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "rootDir": "src",
+    "typeRoots": ["node_modules/@types", "@types", "node_modules"],
+    "noEmit": true, // 자동js 생성막기 (이거 안해주면 빌드했을 때 같은이름의 js파일 막 생기고 난리남...)
+    "noEmitOnError": true // ts파일 에러 시 js파일 생성X
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"], // 타입스크립트 컴파일러가 제외할 파일 또는 디렉터리
+  "outDir": "dist" // 빌드 결과물을 담을 디렉터리
+}
