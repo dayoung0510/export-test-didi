@@ -1,9 +1,14 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import path from 'path';
-import dts from 'vite-plugin-dts';
+
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+import commonjs from 'vite-plugin-commonjs';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+import dts from 'vite-plugin-dts';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+
+import { extname, relative, resolve } from 'path';
+import { fileURLToPath } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,7 +20,11 @@ export default defineConfig({
       tsconfigPath: 'tsconfig.node.json',
     }),
     viteTsconfigPaths(),
+    commonjs(),
   ],
+  server: {
+    port: 5173, // 사용할 포트 번호를 설정합니다.
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, './src'),
@@ -25,7 +34,17 @@ export default defineConfig({
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'styled-components'],
+      input: {
+        index: path.resolve(__dirname, './src'),
+        util: path.resolve(__dirname, './src/util'),
+      },
       output: {
+        format: 'es',
+        entryFileNames: () => '[name].[format].js',
+        chunkFileNames: () => '[name].[format].js',
+
+        preserveModules: false,
+        // 글로벌즈 주석 푸니까 민터스에서 import 제대로 된다...
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
@@ -36,6 +55,7 @@ export default defineConfig({
       },
     },
     commonjsOptions: {
+      transformMixedEsModules: true,
       esmExternals: ['react'],
     },
 

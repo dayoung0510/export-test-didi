@@ -1,30 +1,77 @@
-# React + TypeScript + Vite
+# zigap-utils
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+It is a library that collects utils that help communicate between dapp and zigap.
 
-Currently, two official plugins are available:
+## Installation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+npm i zigap-utils --save -D
+```
 
-## Expanding the ESLint configuration
+## Usage
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+```ts
+import { LoginQR } from 'zigap-utils';
 
-- Configure the top-level `parserOptions` property like this:
+const App = () => {
+  ...
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
+  return (
+    <div>
+      <LoginQR
+        dapp='Mintus'
+        url='http://Xphere.mintus.io'
+        availableNetworks={['xphere']}
+        isShowLogo={false}
+        logoSize={25}
+        validTime={10}
+        sigMessage="hello world"
+        onReceive={({ isSuccess, account, payload, signature }) => {
+          if(isSuccess) {
+            // something to do after login
+          }
+        }}
+      />
+    </div>
+  );
 }
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+<br />
+
+---
+
+### `LoginQR` props
+
+| prop | required | type | default value | description |
+| --- | :-: | --- | --- | --- |
+| `dapp` | true | string |  | Name of the dapp to use |
+| `url` | true | string |  | The url of dapp to connect |
+| `availableNetworks` | true | string[] |  | List of connectable networks in dapp |
+| `sigMessage` | true | string |  | Messages signed to verify the identity of the user |
+| `validTime` | true | number |  | QR code valid time(minutes) |
+| `onReceive` | true | (value) => void |  | Function called after login request |
+| `size` | false | number | 128 | canvas width |
+| `bgColor` | false | string | #fff | background color |
+| `fgColor` | false | string | #000 | foreground color |
+| `style` | false | CSSProperties |  | custom css style |
+| `isShowLogo` | false | boolean | false | Zigap logo in the middle of the QR code |
+| `logoSize` | false | number | 30 | logo width & height |
+
+<br>
+
+### `AddressProvideQR` props
+
+| prop                | required | type            | default value | description                             |
+| ------------------- | :------: | --------------- | ------------- | --------------------------------------- |
+| `dapp`              |   true   | string          |               | Name of the dapp to use                 |
+| `url`               |   true   | string          |               | The url of dapp to connect              |
+| `availableNetworks` |   true   | string[]        |               | List of connectable networks in dapp    |
+| `validTime`         |   true   | number          |               | QR code valid time(minutes)             |
+| `onReceive`         |   true   | (value) => void |               | Function called after login request     |
+| `size`              |  false   | number          | 128           | canvas width                            |
+| `bgColor`           |  false   | string          | #fff          | background color                        |
+| `fgColor`           |  false   | string          | #000          | foreground color                        |
+| `style`             |  false   | CSSProperties   |               | custom css style                        |
+| `isShowLogo`        |  false   | boolean         | false         | Zigap logo in the middle of the QR code |
+| `logoSize`          |  false   | number          | 30            | logo width & height                     |

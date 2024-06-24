@@ -1,27 +1,34 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "es5",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["vite/client"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "baseUrl": ".",
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "Node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react-jsx",
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "rootDir": "src",
+    "typeRoots": ["node_modules/@types", "@types", "node_modules"],
+    "noEmit": true, // 자동js 생성막기
+    "noEmitOnError": true, // ts파일 에러 시 js파일 생성X
+
+    "allowSyntheticDefaultImports": true // import cryptoJS
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src"],
   "exclude": ["node_modules"],
-  "declaration": true,
-  "outDir": "dist"
+  "declaration": true
 }
