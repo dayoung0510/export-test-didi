@@ -7,9 +7,6 @@ import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import dts from 'vite-plugin-dts';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 
-import { extname, relative, resolve } from 'path';
-import { fileURLToPath } from 'node:url';
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
