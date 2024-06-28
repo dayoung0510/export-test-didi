@@ -12,5 +12,5 @@ export type AddressProvideQRProps = {
   dapp: string;
   url: string;
   validTime: number;
-  onReceive: (result: AddressProvideResultType) => void;
+  onReceive: (isSuccess: Boolean) => void;
 } & CommonStyleType;

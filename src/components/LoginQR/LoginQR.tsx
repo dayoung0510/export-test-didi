@@ -1,29 +1,31 @@
 import { useEffect, useState } from 'react';
 
 import { QRCodeCanvas } from 'qrcode.react';
-import cryptoUtils from 'src/util/cryptoUtils';
-import login from 'src/util/login';
-import qr from 'src/util/qrService';
-import SocketService from 'src/util/socketService';
+import cryptoUtils from 'src/utils/cryptoUtils';
+import login from 'src/utils/login';
+import { Qr } from 'src/zigap/qr';
+import SocketService from 'src/utils/socketService';
+import { LOGIN_RES_KEY } from 'src/hooks/useZigap';
 
 import ZigapLogo from '../../assets/zigap-icon.svg';
 
-import type { AccountType, LoginQRProps, LoginResultType, PayloadType } from './LoginQR.types';
+import type { AccountType, LoginQRProps, LoginResultType, PayloadType, OnReceiveType } from './LoginQR.types';
+import { Xphere } from 'src/xphere';
 
 const LoginQR = ({
   availableNetworks,
   dapp,
   url,
   sigMessage,
-  validTime,
   onReceive,
+  validTime,
   isShowLogo = false,
   logoSize = 30,
   ...props
 }: LoginQRProps) => {
   const [isValid, setIsValid] = useState(true);
   const nonce = cryptoUtils.generateNonce(16);
-  const { qrCode, roomId } = qr.generateQrCode('login', dapp, url, availableNetworks);
+  const { qrCode, roomId } = Qr.generateQrCode('login', dapp, url, availableNetworks);
 
   useEffect(() => {
     const timer = setTimeout(
@@ -40,16 +42,7 @@ const LoginQR = ({
   useEffect(() => {
     const getAccount = async () => {
       try {
-        console.log('roomId...', roomId);
-
-        // TODO!! QR작업 성공했다하면 진짜값으로 교체 후 아래로 내리기
-        const testResult: LoginResultType = {
-          account: { address: 'aaa', network: 'bbb', nickName: 'ccc' },
-          payload: { publicKey: 'ddd', message: 'eee' },
-          signature: 'fff',
-          isSuccess: true,
-        };
-        localStorage.setItem('loginRes', JSON.stringify(testResult));
+        console.log('roomId', roomId);
 
         const loginAccount = await login.qrLogin(roomId, sigMessage, nonce);
 
@@ -60,29 +53,22 @@ const LoginQR = ({
           message: message,
         };
 
-        const account: AccountType = {
+        const result: LoginResultType = {
           address: loginAccount.address,
           network: loginAccount.network,
           nickName: loginAccount.nickName,
+          token: Xphere.Validation.createToken(payload, loginAccount.signature),
+          issuedTime: new Date(),
         };
 
-        const result: LoginResultType = {
-          isSuccess: true,
-          account: account,
-          payload: payload,
-          signature: loginAccount.signature,
-        };
-
-        onReceive(result);
+        localStorage.setItem(LOGIN_RES_KEY, JSON.stringify(result));
+        onReceive({ isSuccess: true });
       } catch (error) {
-        const result: LoginResultType = {
-          isSuccess: false,
-        };
-        onReceive(result);
+        onReceive({ isSuccess: false });
       }
     };
     getAccount();
-  }, [onReceive, sigMessage]);
+  }, [sigMessage]);
 
   return isValid ? (
     <QRCodeCanvas

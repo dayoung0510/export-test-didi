@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import { QRCodeCanvas } from 'qrcode.react';
+import { Qr } from 'src/zigap/qr';
 
 import ZigapLogo from '../../assets/zigap-icon.svg';
-import provide from '../../util/addressProvide';
-import qr from '../../util/qrService';
-import SocketService from '../../util/socketService';
+import provide from '../../utils/addressProvide';
+import SocketService from '../../utils/socketService';
 
 import type { AddressProvideQRProps, AddressProvideResultType } from './AddressProvideQR.types';
 
@@ -21,7 +21,7 @@ const AddressProvideQR = ({
 }: AddressProvideQRProps) => {
   const [isValid, setIsValid] = useState(true);
 
-  const { qrCode, roomId } = qr.generateQrCode('provide', dapp, url, availableNetworks);
+  const { qrCode, roomId } = Qr.generateQrCode('provide', dapp, url, availableNetworks);
 
   useEffect(() => {
     const timer = setTimeout(
@@ -46,16 +46,13 @@ const AddressProvideQR = ({
           network: loginAccount.network,
           nickName: loginAccount.nickName,
         };
-        onReceive(result);
+        onReceive(true);
       } catch (error) {
-        const result: AddressProvideResultType = {
-          isSuccess: false,
-        };
-        onReceive(result);
+        onReceive(false);
       }
     };
     getAccount();
-  }, [onReceive]);
+  }, []);
 
   return isValid ? (
     <QRCodeCanvas

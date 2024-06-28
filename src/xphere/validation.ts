@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js';
-import cryptoUtils from 'src/util/cryptoUtils';
-import Xphere from 'src/xphere';
+import cryptoUtils from 'src/utils/cryptoUtils';
+import sign from './sign';
 
 import type { PayloadType } from 'src/components';
 
@@ -29,15 +29,9 @@ class Validation {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, encodedPayload, signature] = token.split('.');
 
-    const payload = JSON.parse(
-      CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(encodedPayload)),
-    );
+    const payload = JSON.parse(CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(encodedPayload)));
 
-    const verified = cryptoUtils.xphereVerify(
-      payload.message,
-      payload.publicKey,
-      signature,
-    );
+    const verified = cryptoUtils.xphereVerify(payload.message, payload.publicKey, signature);
 
     if (verified) {
       return payload;
@@ -47,7 +41,7 @@ class Validation {
   }
 
   public getAddress(publicKey: string) {
-    const address = Xphere.Sign.address(publicKey);
+    const address = sign.address(publicKey);
     return address;
   }
 }

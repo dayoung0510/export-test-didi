@@ -1,12 +1,8 @@
 import styled from 'styled-components';
 
 import { AddressProvideQR, LoginQR } from './components';
-import { useZigap } from './util';
 
 const App = () => {
-  const res = useZigap();
-  console.log('res!!', res);
-
   return (
     <Container>
       <div>
@@ -16,7 +12,7 @@ const App = () => {
           url='http://Xphere.mintus.io'
           sigMessage='hello world'
           validTime={10}
-          onReceive={(res) => console.log('login res!!', res)}
+          onReceive={(res) => console.log(res)}
           size={100}
         />
         <span>Login</span>
@@ -25,11 +21,11 @@ const App = () => {
       {/* <div>
         <AddressProvideQR
           availableNetworks={['xphere']}
-          dapp="Mintus"
-          url="http://Xphere.mintus.io"
+          dapp='Mintus'
+          url='http://Xphere.mintus.io'
           isShowLogo={false}
           validTime={10}
-          onReceive={(res) => console.log('provide res!!', res)}
+          onReceive={(res) => console.log(res)}
         />
         <span>AddressProvide</span>
       </div> */}

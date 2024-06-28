@@ -24,10 +24,11 @@ export type AccountType = {
 };
 
 export type LoginResultType = {
-  isSuccess: boolean;
-  account?: AccountType;
-  payload?: PayloadType;
-  signature?: string;
+  address: string;
+  network: string;
+  nickName: string;
+  token: string;
+  issuedTime: Date;
 };
 
 export type LoginQRProps = {
@@ -36,5 +37,9 @@ export type LoginQRProps = {
   url: string;
   sigMessage: string;
   validTime: number;
-  onReceive: (result: LoginResultType) => void;
+  onReceive: (res: OnReceiveType) => void;
 } & CommonStyleType;
+
+export type OnReceiveType = {
+  isSuccess: boolean;
+};

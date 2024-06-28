@@ -10,11 +10,9 @@ type XphereType = {
   Validation: typeof Validation;
 };
 
-const Xphere: XphereType = {
+export const Xphere: XphereType = {
   Enc,
   Sign,
   Util,
   Validation,
 };
-
-export default Xphere;
