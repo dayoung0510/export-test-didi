@@ -40,7 +40,17 @@ const LoginQR = ({
   useEffect(() => {
     const getAccount = async () => {
       try {
-        console.log('roomId', roomId);
+        console.log('roomId...', roomId);
+
+        // TODO!! QR작업 성공했다하면 진짜값으로 교체 후 아래로 내리기
+        const testResult: LoginResultType = {
+          account: { address: 'aaa', network: 'bbb', nickName: 'ccc' },
+          payload: { publicKey: 'ddd', message: 'eee' },
+          signature: 'fff',
+          isSuccess: true,
+        };
+        localStorage.setItem('loginRes', JSON.stringify(testResult));
+
         const loginAccount = await login.qrLogin(roomId, sigMessage, nonce);
 
         const message = `${sigMessage}\n\nNonce: ${nonce}`;
@@ -62,6 +72,7 @@ const LoginQR = ({
           payload: payload,
           signature: loginAccount.signature,
         };
+
         onReceive(result);
       } catch (error) {
         const result: LoginResultType = {
