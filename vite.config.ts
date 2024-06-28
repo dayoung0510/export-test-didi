@@ -31,15 +31,7 @@ export default defineConfig({
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'styled-components'],
-      input: {
-        index: path.resolve(__dirname, './src'),
-        util: path.resolve(__dirname, './src/util'),
-      },
       output: {
-        format: 'es',
-        entryFileNames: () => '[name].[format].js',
-        chunkFileNames: () => '[name].[format].js',
-
         preserveModules: false,
         // 글로벌즈 주석 푸니까 민터스에서 import 제대로 된다...
         globals: {
