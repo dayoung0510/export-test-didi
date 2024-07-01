@@ -7,6 +7,7 @@ import { Qr } from 'src/zigap/qr';
 import SocketService from 'src/utils/socketService';
 import { LOGIN_RES_KEY } from 'src/hooks/useZigap';
 import dayjs from 'dayjs';
+import { TIME_FORMAT } from 'src/hooks/useZigap';
 
 import ZigapLogo from '../../assets/zigap-icon.svg';
 
@@ -58,7 +59,7 @@ const LoginQR = ({
           network: 'bbb',
           nickName: 'ccc',
           token: 'ddd',
-          issuedDateTime: dayjs().format('YYYY-MM-DD hh:mm:ss'),
+          issuedDateTime: dayjs().format(TIME_FORMAT),
           expire:
             expireType === 'NONE'
               ? ({ type: expireType } as NoneLoginExpire)
@@ -80,7 +81,7 @@ const LoginQR = ({
           network: loginAccount.network,
           nickName: loginAccount.nickName,
           token: Xphere.Validation.createToken(payload, loginAccount.signature),
-          issuedDateTime: dayjs().format('YYYY-MM-DD hh:mm:ss'),
+          issuedDateTime: dayjs().format(TIME_FORMAT),
           expire:
             expireType === 'NONE'
               ? ({ type: expireType } as NoneLoginExpire)
