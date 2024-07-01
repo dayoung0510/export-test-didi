@@ -23,12 +23,23 @@ export type AccountType = {
   nickName: string;
 };
 
+export type NoneLoginExpire = {
+  type: 'NONE';
+  seconds?: never; // 'NONE'일 때는 time을 받지 않음
+};
+export type FixedOrExtensionLoginExpire = {
+  type: 'FIX' | 'EXTEND';
+  seconds: number; // 'FIXED' 또는 'EXTENSION'일 때는 time이 필수
+};
+export type LoginExpireType = FixedOrExtensionLoginExpire | NoneLoginExpire;
+
 export type LoginResultType = {
   address: string;
   network: string;
   nickName: string;
   token: string;
-  issuedTime: Date;
+  issuedDateTime: string;
+  expire: LoginExpireType;
 };
 
 export type LoginQRProps = {
@@ -36,10 +47,7 @@ export type LoginQRProps = {
   dapp: string;
   url: string;
   sigMessage: string;
-  validTime: number;
-  onReceive: (res: OnReceiveType) => void;
+  validSeconds: number;
+  onReceive: (res: { isSuccess: boolean }) => void;
+  expire: LoginExpireType;
 } & CommonStyleType;
-
-export type OnReceiveType = {
-  isSuccess: boolean;
-};

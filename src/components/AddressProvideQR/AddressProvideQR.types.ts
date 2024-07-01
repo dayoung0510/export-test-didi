@@ -11,6 +11,6 @@ export type AddressProvideQRProps = {
   availableNetworks: string[];
   dapp: string;
   url: string;
-  validTime: number;
+  validSeconds: number;
   onReceive: (isSuccess: Boolean) => void;
 } & CommonStyleType;

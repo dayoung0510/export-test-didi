@@ -13,7 +13,7 @@ const AddressProvideQR = ({
   availableNetworks,
   dapp,
   url,
-  validTime,
+  validSeconds,
   onReceive,
   isShowLogo = false,
   logoSize = 30,
@@ -29,11 +29,11 @@ const AddressProvideQR = ({
         SocketService.leaveRoom(roomId);
         setIsValid(false);
       },
-      validTime * 60 * 1000,
+      validSeconds * 60 * 1000,
     );
 
     return () => clearTimeout(timer);
-  }, [roomId, validTime]);
+  }, [roomId, validSeconds]);
 
   useEffect(() => {
     const getAccount = async () => {
