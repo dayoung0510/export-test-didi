@@ -46,9 +46,9 @@ const AddressProvideQR = ({
           network: loginAccount.network,
           nickName: loginAccount.nickName,
         };
-        onReceive(true);
+        onReceive({ isSuccess: true });
       } catch (error) {
-        onReceive(false);
+        onReceive({ isSuccess: false });
       }
     };
     getAccount();

@@ -11,7 +11,7 @@ class QrService {
 
     let qrCode = '';
     if (type === 'login') {
-      qrCode = `http://172.30.1.27:3001/qrCode/scan?type=login&roomId=${roomId}&dapp=${dapp}&url=${url}&network=${network}`;
+      qrCode = `https://zigap.io/qrCode/scan?type=login&roomId=${roomId}&dapp=${dapp}&url=${url}&network=${network}`;
     } else if (type === 'send') {
       qrCode = `zigap://send?roomId=${roomId}&dapp=${dapp}`;
     } else if (type === 'provide') {

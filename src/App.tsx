@@ -11,10 +11,10 @@ const App = () => {
           dapp='Mintus'
           url='http://Xphere.mintus.io'
           sigMessage='hello world'
-          validSeconds={10}
-          onReceive={(res) => console.log(res)}
-          size={100}
-          expire={{ type: 'FIX', seconds: 5 }}
+          validSeconds={100}
+          expire={{ type: 'FIX', seconds: 60000 }}
+          onReceive={(isSuccess) => console.log(isSuccess)}
+          size={200}
         />
         <span>Login</span>
       </div>
@@ -26,7 +26,7 @@ const App = () => {
           url='http://Xphere.mintus.io'
           isShowLogo={false}
           validSeconds={10}
-          onReceive={(res) => console.log(res)}
+          onReceive={(isSuccess) => console.log(isSuccess)}
         />
         <span>AddressProvide</span>
       </div> */}

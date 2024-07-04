@@ -48,6 +48,7 @@ export type LoginQRProps = {
   url: string;
   sigMessage: string;
   validSeconds: number;
-  onReceive: (res: { isSuccess: boolean }) => void;
+  onReceive?: (res: { isSuccess: boolean }) => void;
   expire: LoginExpireType;
+  icon?: string;
 } & CommonStyleType;

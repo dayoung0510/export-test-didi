@@ -3,13 +3,13 @@ import { LoginResultType } from 'src/components';
 import dayjs from 'dayjs';
 
 export const LOGIN_RES_KEY = 'userInfo';
-export const TIME_FORMAT = 'YYYY-MM-DD HH:MM:ss';
+export const TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const useZigap = () => {
   const [result, setResult] = useState<LoginResultType | undefined>(undefined);
   const [expireDateTime, setExpireDateTime] = useState<string | undefined>(undefined);
 
-  /* useInfo 셋팅 */
+  /* userInfo 셋팅 */
   useEffect(() => {
     const data = localStorage.getItem(LOGIN_RES_KEY);
     if (data) {
@@ -28,7 +28,7 @@ const useZigap = () => {
         const extendedExpireDateTime = dayjs().add(seconds, 'seconds').format(TIME_FORMAT);
 
         // case 2. 고정된 만료예정시각
-        const fixedExpireDateTime = dayjs(result.issuedDateTime).add(seconds, 'second').format(TIME_FORMAT);
+        const fixedExpireDateTime = dayjs(result.issuedDateTime).add(seconds, 'seconds').format(TIME_FORMAT);
 
         // case 1,2를 고려한 최종 만료예정시각
         const calculatedExpireDateTime = type === 'EXTEND' ? extendedExpireDateTime : fixedExpireDateTime;

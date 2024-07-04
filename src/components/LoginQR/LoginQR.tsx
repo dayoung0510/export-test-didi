@@ -31,9 +31,11 @@ const LoginQR = ({
   isShowLogo = false,
   logoSize = 30,
   expire,
+  icon,
   ...props
 }: LoginQRProps) => {
   const [isValid, setIsValid] = useState(true);
+
   const nonce = cryptoUtils.generateNonce(16);
   const { qrCode, roomId } = Qr.generateQrCode('login', dapp, url, availableNetworks);
 
@@ -50,26 +52,13 @@ const LoginQR = ({
     const getAccount = async () => {
       try {
         console.log('roomId', roomId);
-        const expireType = expire.type;
-        const expireSeconds = expire.seconds;
-
-        // TODO!! 모달 열기만 하면 나오는 임시 데이터임
-        const testData: LoginResultType = {
-          address: 'acacac',
-          network: 'bbb',
-          nickName: 'ccc',
-          token: 'ddd',
-          issuedDateTime: dayjs().format(TIME_FORMAT),
-          expire:
-            expireType === 'NONE'
-              ? ({ type: expireType } as NoneLoginExpire)
-              : ({ type: expireType, seconds: expireSeconds } as FixedOrExtensionLoginExpire),
-        };
-        localStorage.setItem(LOGIN_RES_KEY, JSON.stringify(testData));
-        // TODO!! 위에꺼 지우기
 
         const loginAccount = await login.qrLogin(roomId, sigMessage, nonce);
+
         const message = `${sigMessage}\n\nNonce: ${nonce}`;
+
+        const expireType = expire.type;
+        const expireSeconds = expire.seconds;
 
         const payload: PayloadType = {
           publicKey: loginAccount.publicKey,
@@ -88,14 +77,15 @@ const LoginQR = ({
               : ({ type: expireType, seconds: expireSeconds } as FixedOrExtensionLoginExpire),
         };
 
+        onReceive && onReceive({ isSuccess: true });
+
         localStorage.setItem(LOGIN_RES_KEY, JSON.stringify(result));
-        onReceive({ isSuccess: true });
       } catch (error) {
-        onReceive({ isSuccess: false });
+        onReceive && onReceive({ isSuccess: false });
       }
     };
     getAccount();
-  }, [sigMessage]);
+  }, [onReceive, sigMessage]);
 
   return isValid ? (
     <QRCodeCanvas
