@@ -6,6 +6,7 @@ import commonjs from 'vite-plugin-commonjs';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import dts from 'vite-plugin-dts';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+import terser from '@rollup/plugin-terser';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,6 +24,7 @@ export default defineConfig({
     port: 5173, // 사용할 포트 번호를 설정합니다.
   },
   build: {
+    minify: true,
     lib: {
       entry: path.resolve(__dirname, './src'),
       name: 'export-test-didi',
@@ -30,6 +32,7 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
+      plugins: [terser()], // 난독화를 위함
       external: ['react', 'react-dom', 'styled-components'],
       output: {
         preserveModules: false,

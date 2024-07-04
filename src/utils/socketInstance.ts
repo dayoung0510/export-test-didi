@@ -4,8 +4,8 @@ import type { Socket } from 'socket.io-client';
 
 import cryptoUtils from './cryptoUtils';
 
-const encryptedSocketUrl = import.meta.env.VITE_SOCKET_ENCRYPTED_URL || ''; // 암호화된거
-const key: string = import.meta.env.VITE_SOCKET_KEY || ''; // 키값
+const encryptedSocketUrl = import.meta.env.VITE_SOCKET_ENCRYPTED_URL || '';
+const key: string = import.meta.env.VITE_SOCKET_KEY || '';
 const decryptedSocketUrl = cryptoUtils.decrypt(encryptedSocketUrl, key);
 
 if (!decryptedSocketUrl) {
