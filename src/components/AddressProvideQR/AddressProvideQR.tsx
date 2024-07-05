@@ -17,11 +17,12 @@ const AddressProvideQR = ({
   onReceive,
   isShowLogo = false,
   logoSize = 30,
+  icon,
   ...props
 }: AddressProvideQRProps) => {
   const [isValid, setIsValid] = useState(true);
 
-  const { qrCode, roomId } = Qr.generateQrCode('provide', dapp, url, availableNetworks);
+  const { qrCode, roomId } = Qr.generateQrCode('provide', dapp, url, availableNetworks, icon);
 
   useEffect(() => {
     const timer = setTimeout(

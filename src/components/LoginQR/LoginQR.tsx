@@ -37,7 +37,7 @@ const LoginQR = ({
   const [isValid, setIsValid] = useState(true);
 
   const nonce = cryptoUtils.generateNonce(16);
-  const { qrCode, roomId } = Qr.generateQrCode('login', dapp, url, availableNetworks);
+  const { qrCode, roomId } = Qr.generateQrCode('login', dapp, url, availableNetworks, icon);
 
   useEffect(() => {
     const timer = setTimeout(() => {

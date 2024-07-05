@@ -13,4 +13,5 @@ export type AddressProvideQRProps = {
   url: string;
   validSeconds: number;
   onReceive: (res: { isSuccess: boolean }) => void;
+  icon?: string;
 } & CommonStyleType;
