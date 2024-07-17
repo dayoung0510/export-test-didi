@@ -42,13 +42,19 @@ export type LoginResultType = {
   expire: LoginExpireType;
 };
 
+export type ProcessingMarkType =
+  | { type: 'DEFAULT' }
+  | { type: 'CUSTOM'; component: React.ReactNode }
+  | { type: 'NONE' };
+
 export type LoginQRProps = {
   availableNetworks: string[];
   dapp: string;
   url: string;
   sigMessage: string;
   validSeconds: number;
-  onReceive?: (res: { isSuccess: boolean }) => void;
+  onReceive?: (res: { status: 'REQUEST' | 'ACCOUNT' | 'SUCCESS' | 'ERROR' }) => void;
   expire: LoginExpireType;
   icon?: string;
+  processingMark?: ProcessingMarkType;
 } & CommonStyleType;

@@ -14,13 +14,15 @@ import { Qr } from 'src/zigap/qr';
 import ZigapLogo from '../../assets/zigap-icon.svg';
 
 import type {
-  AccountType,
   FixedOrExtensionLoginExpire,
   LoginQRProps,
   LoginResultType,
   NoneLoginExpire,
   PayloadType,
+  ProcessingMarkType,
 } from './LoginQR.types';
+
+type MarkType = ProcessingMarkType extends { type: infer U } ? U : never;
 
 const LoginQR = ({
   availableNetworks,
@@ -34,6 +36,7 @@ const LoginQR = ({
   expire,
   icon,
   size,
+  processingMark = { type: 'DEFAULT' },
   ...props
 }: LoginQRProps) => {
   const [isValid, setIsValid] = useState(true);
@@ -56,11 +59,14 @@ const LoginQR = ({
       try {
         console.log('roomId', roomId);
 
-        const requestReceived = await login.reciveRequest(roomId);
+        const requestReceived = await login.receiveRequest(roomId);
         setIsProcessing(true);
+        onReceive && onReceive({ status: 'REQUEST' });
 
         if (requestReceived.isSuccess) {
           const loginAccount = await login.qrLogin(roomId, sigMessage, nonce);
+
+          onReceive && onReceive({ status: 'ACCOUNT' });
 
           const message = `${sigMessage}\n\nNonce: ${nonce}`;
 
@@ -84,22 +90,40 @@ const LoginQR = ({
                 : ({ type: expireType, seconds: expireSeconds } as FixedOrExtensionLoginExpire),
           };
 
-          onReceive && onReceive({ isSuccess: true });
+          // status && status('get result');
+          onReceive && onReceive({ status: 'SUCCESS' });
           setIsProcessing(false);
           localStorage.setItem(LOGIN_RES_KEY, JSON.stringify(result));
         }
       } catch (error) {
-        onReceive && onReceive({ isSuccess: false });
+        onReceive && onReceive({ status: 'ERROR' });
         setIsProcessing(false);
       }
     };
     getAccount();
   }, [onReceive, sigMessage]);
 
+  /* QR인식 진행중일 때 이미지 어떻게 보여줄지 처리  */
+  const processing = (param: MarkType) => {
+    switch (param) {
+      case 'DEFAULT':
+        return <Text>processing...</Text>;
+      case 'NONE':
+        return;
+      case 'CUSTOM':
+        if (processingMark.type === 'CUSTOM') {
+          return processingMark.component;
+        }
+        return;
+      default:
+        return;
+    }
+  };
+
   return isValid ? (
     <>
-      {isProcessing ? (
-        <Skeleton $size={size}>processing...</Skeleton>
+      {isProcessing && processingMark.type !== 'NONE' ? (
+        <Wrapper $size={size}>{processing(processingMark.type)}</Wrapper>
       ) : (
         <QRCodeCanvas
           value={qrCode}
@@ -110,18 +134,23 @@ const LoginQR = ({
       )}
     </>
   ) : (
-    <div>QR loading error</div>
+    <Wrapper>
+      <Text>QR timeout</Text>
+    </Wrapper>
   );
 };
 
 export default LoginQR;
 
-const Skeleton = styled.div<{ $size?: number }>`
+const Wrapper = styled.div<{ $size?: number }>`
   width: ${(props) => (props.$size ? `${props.$size}px` : '128px')};
   height: ${(props) => (props.$size ? `${props.$size}px` : '128px')};
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const Text = styled.div`
   font-size: 12px;
   color: #7a7a7a;
 `;

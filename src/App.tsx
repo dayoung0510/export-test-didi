@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { AddressProvideQR, LoginQR } from './components';
 
 const App = () => {
-  const [result1, setResult1] = useState<undefined | '성공' | '실패'>(undefined);
-  const [result2, setResult2] = useState<undefined | '성공' | '실패'>(undefined);
+  const [result1, setResult1] = useState<undefined | string>(undefined);
+  const [result2, setResult2] = useState<undefined | string>(undefined);
   return (
     <Container>
       <div>
@@ -16,40 +16,21 @@ const App = () => {
           sigMessage='hello world'
           validSeconds={10000}
           expire={{ type: 'FIX', seconds: 60000 }}
-          onReceive={(res) => setResult1(res.isSuccess ? '성공' : '실패')}
+          onReceive={(res) => {
+            if (res.status === 'SUCCESS') {
+              setResult1('성공');
+            } else if (res.status === 'REQUEST' || res.status === 'ACCOUNT') {
+              setResult1(`진행중 - ${res.status}`);
+            } else {
+              setResult1('실패');
+            }
+          }}
           size={200}
+          processingMark={{
+            type: 'NONE',
+          }}
         />
-        <div>
-          {result1 === undefined ? (
-            <span>진행 전</span>
-          ) : result1 === '실패' ? (
-            <span style={{ color: 'red' }}>실패</span>
-          ) : (
-            <span style={{ color: 'blue' }}>성공</span>
-          )}
-        </div>
-      </div>
-
-      <div>
-        <LoginQR
-          availableNetworks={['xphere', 'saseul']}
-          dapp='Mintus'
-          url='http://Xphere.mintus.io'
-          sigMessage='hello world'
-          validSeconds={10000}
-          expire={{ type: 'FIX', seconds: 60000 }}
-          onReceive={(res) => setResult2(res.isSuccess ? '성공' : '실패')}
-          size={200}
-        />
-        <div>
-          {result2 === undefined ? (
-            <span>진행 전</span>
-          ) : result2 === '실패' ? (
-            <span style={{ color: 'red' }}>실패</span>
-          ) : (
-            <span style={{ color: 'blue' }}>성공</span>
-          )}
-        </div>
+        <div>{result1 === undefined ? <span>진행 전</span> : <span>{result1}</span>}</div>
       </div>
 
       {/* <div>

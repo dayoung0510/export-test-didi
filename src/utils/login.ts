@@ -55,7 +55,7 @@ class LoginService {
     });
   }
 
-  public reciveRequest(roomId: string): Promise<{ roomId: string; isSuccess: boolean }> {
+  public receiveRequest(roomId: string): Promise<{ roomId: string; isSuccess: boolean }> {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
