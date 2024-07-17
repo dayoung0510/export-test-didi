@@ -1,6 +1,6 @@
 {
   "name": "export-test-didi",
-  "version": "0.0.404",
+  "version": "0.0.424",
   "description": "",
   "main": "dist/index.es.js",
   "types": "dist/index.d.ts",

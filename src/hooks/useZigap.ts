@@ -6,15 +6,19 @@ export const LOGIN_RES_KEY = 'userInfo';
 export const TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const useZigap = () => {
+  const [isWindowLoaded, setIsLoadedWindow] = useState(false);
   const [result, setResult] = useState<LoginResultType | undefined>(undefined);
   const [expireDateTime, setExpireDateTime] = useState<string | undefined>(undefined);
 
   /* userInfo 셋팅 */
   useEffect(() => {
-    const data = localStorage.getItem(LOGIN_RES_KEY);
-    if (data) {
-      const parsedValue: LoginResultType = JSON.parse(data);
-      setResult(parsedValue);
+    if (typeof window !== 'undefined') {
+      setIsLoadedWindow(true);
+      const data = localStorage.getItem(LOGIN_RES_KEY);
+      if (data) {
+        const parsedValue: LoginResultType = JSON.parse(data);
+        setResult(parsedValue);
+      }
     }
   }, []);
 
@@ -57,6 +61,7 @@ const useZigap = () => {
       expireDateTime,
     },
     logout,
+    isWindowLoaded,
   };
 };
 

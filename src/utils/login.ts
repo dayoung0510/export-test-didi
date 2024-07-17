@@ -1,5 +1,6 @@
 import cryptoUtils from './cryptoUtils';
 import SocketService from './socketService';
+import socketService from './socketService';
 
 import type { AccountCryptoType, ResponseLoginType } from './types';
 
@@ -54,12 +55,18 @@ class LoginService {
     });
   }
 
-  public reciveRequest(): Promise<boolean> {
+  public reciveRequest(roomId: string): Promise<{ roomId: string; isSuccess: boolean }> {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       SocketService.onMessageReceived('requestMessage', (message: any) => {
         if (message.message === 'Request Message') {
-          resolve(true);
+          // TODO!! 지갑앱에서 message 리턴값에 roomId 추가해주기
+          if (roomId === message.roomId) {
+            resolve({ roomId: message.roomId, isSuccess: true });
+          } else {
+            SocketService.leaveRoom(roomId);
+          }
         } else {
           reject(new Error('Request message is different'));
         }
@@ -78,24 +85,48 @@ class LoginService {
     });
   }
 
+  public checkVerified(roomId: string, verified: boolean): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const result = SocketService.checkVerified(roomId, verified);
+      if (result) {
+        socketService.onMessageReceived('checkVerified', (message) => {
+          resolve(message);
+        });
+      } else {
+        reject(new Error('checkVerified failed'));
+      }
+    });
+  }
+  public completeMessage(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      SocketService.onMessageReceived('completeMessage', (message: any) => {
+        console.log('message', message);
+        if (message?.data) {
+          resolve();
+        } else {
+          reject(new Error('completed fail'));
+        }
+      });
+    });
+  }
+
   public async qrLogin(roomId: string, message: string, nonce: string): Promise<ResponseLoginType> {
     try {
-      const requestReceived = await this.reciveRequest();
-      if (requestReceived) {
-        message = `${message}\n\nNonce: ${nonce}`;
-        await this.sendMessage(roomId, message);
-        const { publicKey, signature, address, network, nickName } = await this.getAccountCrypto();
+      message = `${message}\n\nNonce: ${nonce}`;
+      await this.sendMessage(roomId, message);
+      const { publicKey, signature, address, network, nickName } = await this.getAccountCrypto();
 
-        const verified = cryptoUtils.xphereVerify(message, publicKey, signature);
+      const verified = cryptoUtils.xphereVerify(message, publicKey, signature);
 
-        if (!verified) {
-          throw new Error('Verification failed');
-        }
-
-        return { address, network, signature, publicKey, nickName };
-      } else {
+      if (!verified) {
         throw new Error('Verification failed');
+      } else {
+        const result = await this.checkVerified(roomId, verified);
+        console.log(result, 'result');
       }
+
+      return { address, network, signature, publicKey, nickName };
     } catch (error) {
       return Promise.reject(error);
     } finally {

@@ -1,5 +1,4 @@
 import CryptoJS from 'crypto-js';
-
 import SocketService from 'src/utils/socketService';
 
 import type { QrType } from './types';
