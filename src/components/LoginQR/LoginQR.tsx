@@ -90,7 +90,6 @@ const LoginQR = ({
                 : ({ type: expireType, seconds: expireSeconds } as FixedOrExtensionLoginExpire),
           };
 
-          // status && status('get result');
           onReceive && onReceive({ status: 'SUCCESS' });
           setIsProcessing(false);
           localStorage.setItem(LOGIN_RES_KEY, JSON.stringify(result));

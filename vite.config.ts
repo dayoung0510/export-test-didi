@@ -21,7 +21,16 @@ export default defineConfig({
     commonjs(),
   ],
   server: {
-    port: 5173, // 사용할 포트 번호를 설정합니다.
+    port: 5173,
+    // // socket 요청을 ws.zigap.io로 프록시
+    // proxy: {
+    //   '/socket.io': {
+    //     target: 'https://ws.zigap.io',
+    //     changeOrigin: true,
+    //     secure: false,
+    //     ws: true,
+    //   },
+    // },
   },
   build: {
     minify: true,

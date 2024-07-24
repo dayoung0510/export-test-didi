@@ -5,7 +5,7 @@ import { AddressProvideQR, LoginQR } from './components';
 
 const App = () => {
   const [result1, setResult1] = useState<undefined | string>(undefined);
-  const [result2, setResult2] = useState<undefined | string>(undefined);
+
   return (
     <Container>
       <div>
@@ -16,11 +16,11 @@ const App = () => {
           sigMessage='hello world'
           validSeconds={10000}
           expire={{ type: 'FIX', seconds: 60000 }}
-          onReceive={(res) => {
-            if (res.status === 'SUCCESS') {
+          onReceive={({ status }) => {
+            if (status === 'SUCCESS') {
               setResult1('성공');
-            } else if (res.status === 'REQUEST' || res.status === 'ACCOUNT') {
-              setResult1(`진행중 - ${res.status}`);
+            } else if (status === 'REQUEST' || status === 'ACCOUNT') {
+              setResult1(`진행중 - ${status}`);
             } else {
               setResult1('실패');
             }
